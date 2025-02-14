@@ -1,0 +1,14 @@
+Options -Indexes
+<Files .htaccess>
+    Deny from all
+</Files>
+
+<FilesMatch "^(\.env|composer\.(json|lock))">
+    Deny from all
+</FilesMatch>
+
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+    Header set X-Frame-Options "SAMEORIGIN"
+    Header set X-XSS-Protection "1; mode=block"
+</IfModule>

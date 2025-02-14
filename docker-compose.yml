@@ -1,0 +1,76 @@
+version: '3.8'
+
+services:
+  apache-php:
+    build: ./apache-php
+    networks:
+      - lamp-network
+    volumes:
+      - apache-data:/var/www/html
+      - apache-config:/etc/apache2
+    environment:
+      - PHP_MEMORY_LIMIT=2G
+      - PHP_MAX_EXECUTION_TIME=180
+      - APACHE_MAX_REQUEST_WORKERS=400
+      - APACHE_MAX_CONNECTIONS_PER_CHILD=10000
+      - SERVER_NAME=example.com
+      - DOCUMENT_ROOT=public
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  mariadb:
+    image: mariadb:11.4
+    networks:
+      - lamp-network
+    volumes:
+      - mariadb-data:/var/lib/mysql
+      - ./mariadb/config:/etc/mysql/conf.d
+    environment:
+      - MYSQL_ROOT_PASSWORD=supersecret
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 14G
+
+  nginx-proxy:
+    image: jc21/nginx-proxy-manager:latest
+    ports:
+      - "80:80"
+      - "443:443"
+      - "81:81"
+    networks:
+      - lamp-network
+    volumes:
+      - npm-data:/data
+      - npm-letsencrypt:/etc/letsencrypt
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    networks:
+      - lamp-network
+    environment:
+      - PMA_HOST=mariadb
+      - PMA_USER=root
+      - PMA_PASSWORD=supersecret
+    depends_on:
+      - mariadb
+
+volumes:
+  mariadb-data:
+  npm-data:
+  npm-letsencrypt:
+  apache-data:
+  apache-config:
+
+networks:
+  lamp-network:
+    driver: bridge

@@ -1,0 +1,139 @@
+```markdown
+# 🐳 Docker LAMP Stack with Nginx Proxy Manager
+
+## 🔥 Main Features
+- **PHP 8.4** with essential modules and optimized OPcache
+- **Apache** with preconfigured VirtualHosts and secure .htaccess
+- **MariaDB 11.4** tuned for high performance
+- 🔒 Automatic SSL via **Nginx Proxy Manager** (Let's Encrypt)
+- 📊 phpMyAdmin integration
+- 🛡️ Isolated network and resource management (CPU/RAM)
+- 🔧 Customizable configurations through environment variables
+
+## 📋 Prerequisites
+- Docker 20.10+ and Docker Compose 1.29+
+- Server with **16GB RAM** (adjustable in `docker-compose.yml`)
+- Registered domain pointing to your public IP
+- Open ports: `80`, `443`, `81` (NPM admin)
+
+## 🚀 Quick Installation
+```bash
+git clone https://github.com/yourusername/docker-lamp.git
+cd docker-lamp
+docker-compose up -d --build
+```
+
+## ⚙️ Initial Configuration
+
+### 🌐 1. Nginx Proxy Manager Setup
+1. Access the admin panel:
+   ```
+   http://<your-ip>:81
+   ```
+2. Initial credentials:
+   - Email: `admin@example.com`
+   - Password: `changeme` (change immediately)
+3. Create a **Proxy Host**:
+   - **Domain Names**: yourdomain.com
+   - **Forward Hostname/IP**: `apache-php`
+   - **Port**: `80`
+4. Enable SSL:
+   - Use Let's Encrypt with a valid email
+   - Enable "Force SSL" and HTTP/2
+
+### 🖥️ 2. Add Virtual Hosts
+```bash
+# Execute inside the Apache container
+docker exec -it docker-lamp-apache-php-1 \
+  /var/www/html/init-vhost.sh newdomain.com /public
+```
+
+### 🗃️ 3. Access phpMyAdmin
+1. Create a new proxy host in NPM pointing to `phpmyadmin:80`
+2. Use MariaDB credentials from `docker-compose.yml`:
+   - User: `root`
+   - Password: `supersecret`
+
+## 🛠️ System Management
+
+### 🔐 SSL Certificates
+- Automatic renewal managed by NPM
+- Add new domains from the "SSL Certificates" tab
+- Force HTTPS redirect in Proxy Host settings
+
+### 📊 Resource Monitoring
+```bash
+docker stats
+```
+
+### 💾 Database Backup
+```bash
+docker exec docker-lamp-mariadb-1 \
+  mysqldump -u root -p"supersecret" --all-databases > backup.sql
+```
+
+## 🌿 Environment Variables
+
+| Service     | Variables                  | Default Value |
+|-------------|----------------------------|---------------|
+| Apache-PHP  | `PHP_MEMORY_LIMIT`         | 2G            |
+|             | `SERVER_NAME`              | example.com   |
+| MariaDB     | `MYSQL_ROOT_PASSWORD`      | supersecret   |
+
+## 🌐 Network Architecture
+```
+Internet → Nginx Proxy Manager (SSL) → Apache-PHP ↔ MariaDB
+                         ↳ phpMyAdmin
+```
+
+## 🔒 Security Recommendations
+1. Change default credentials in `docker-compose.yml`
+2. Restrict access to port 81 (NPM admin) via firewall
+3. Regularly update Docker images
+   ```bash
+   docker-compose pull && docker-compose up -d
+   ```
+4. Implement firewall rules for non-essential ports
+5. Schedule automatic database backups
+
+## 🚑 Troubleshooting
+
+### Common Issues
+- **Port conflicts**: Stop existing web services
+- **SSL errors**: Check certificate validity in NPM
+- **DB connections**: Verify connectivity between containers
+- **Permissions**: Rebuild containers with clean volumes
+
+### View Logs
+```bash
+docker-compose logs [service_name]
+```
+
+---
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
+**Note**: Adjust resource limits in `docker-compose.yml` according to server specifications. For production, use secure secret management.
+
+---
+
+**Contributions welcome!**  
+🐛 Report issues | 💡 Suggest features | 📥 Submit PRs
+```
+
+This README includes:
+- Fully translated content to English 🇬🇧
+- Modern emoji-enhanced headings
+- Clear visual hierarchy
+- Complete setup/management instructions
+- Security recommendations
+- Troubleshooting section
+- License badge
+- Contribution guidelines
+- Responsive formatting for GitHub
+- Placeholder for architecture diagram (replace with actual diagram URL)
+
+To use:
+1. Replace `yourusername` in clone URL
+2. Add actual architecture diagram URL
+3. Customize variables/values as needed
+4. Add LICENSE file for MIT badge
