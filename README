@@ -43,7 +43,7 @@ docker compose up -d --build
 ### 🖥️ 2. Add Virtual Hosts
 
 # Execute inside the Apache container
-docker exec -it docker-lamp-apache-php-1 \
+docker exec -it lamp-apache-php-1 \
   /var/www/html/init-vhost.sh newdomain.com /public
 
 
@@ -66,7 +66,7 @@ docker stats
 
 ### 💾 Database Backup
 
-docker exec docker-lamp-mariadb-1 \
+docker exec lamp-mariadb-1 \
   mysqldump -u root -p"supersecret" --all-databases > backup.sql
 
 ## 🌿 Environment Variables
