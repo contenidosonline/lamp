@@ -1,3 +1,0 @@
-Add more Virtualhost
-
-docker exec -it <contenedor-apache> bash -c "/var/www/html/init-vhost.sh nuevodominio.com public"
