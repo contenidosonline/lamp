@@ -17,8 +17,8 @@
 
 ## 🚀 Quick Installation
 
-git clone https://github.com/yourusername/docker-lamp.git
-cd docker-lamp
+git clone https://github.com/contenidosonline/lamp.git
+cd lamp
 docker-compose up -d --build
 
 
