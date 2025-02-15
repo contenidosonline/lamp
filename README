@@ -1,4 +1,3 @@
-```markdown
 # 🐳 Docker LAMP Stack with Nginx Proxy Manager
 
 ## 🔥 Main Features
@@ -17,19 +16,19 @@
 - Open ports: `80`, `443`, `81` (NPM admin)
 
 ## 🚀 Quick Installation
-```bash
+
 git clone https://github.com/yourusername/docker-lamp.git
 cd docker-lamp
 docker-compose up -d --build
-```
+
 
 ## ⚙️ Initial Configuration
 
 ### 🌐 1. Nginx Proxy Manager Setup
 1. Access the admin panel:
-   ```
+
    http://<your-ip>:81
-   ```
+
 2. Initial credentials:
    - Email: `admin@example.com`
    - Password: `changeme` (change immediately)
@@ -42,11 +41,11 @@ docker-compose up -d --build
    - Enable "Force SSL" and HTTP/2
 
 ### 🖥️ 2. Add Virtual Hosts
-```bash
+
 # Execute inside the Apache container
 docker exec -it docker-lamp-apache-php-1 \
   /var/www/html/init-vhost.sh newdomain.com /public
-```
+
 
 ### 🗃️ 3. Access phpMyAdmin
 1. Create a new proxy host in NPM pointing to `phpmyadmin:80`
@@ -62,15 +61,13 @@ docker exec -it docker-lamp-apache-php-1 \
 - Force HTTPS redirect in Proxy Host settings
 
 ### 📊 Resource Monitoring
-```bash
+
 docker stats
-```
 
 ### 💾 Database Backup
-```bash
+
 docker exec docker-lamp-mariadb-1 \
   mysqldump -u root -p"supersecret" --all-databases > backup.sql
-```
 
 ## 🌿 Environment Variables
 
@@ -81,18 +78,18 @@ docker exec docker-lamp-mariadb-1 \
 | MariaDB     | `MYSQL_ROOT_PASSWORD`      | supersecret   |
 
 ## 🌐 Network Architecture
-```
+
 Internet → Nginx Proxy Manager (SSL) → Apache-PHP ↔ MariaDB
                          ↳ phpMyAdmin
-```
+
 
 ## 🔒 Security Recommendations
 1. Change default credentials in `docker-compose.yml`
 2. Restrict access to port 81 (NPM admin) via firewall
 3. Regularly update Docker images
-   ```bash
+
    docker-compose pull && docker-compose up -d
-   ```
+
 4. Implement firewall rules for non-essential ports
 5. Schedule automatic database backups
 
@@ -105,11 +102,9 @@ Internet → Nginx Proxy Manager (SSL) → Apache-PHP ↔ MariaDB
 - **Permissions**: Rebuild containers with clean volumes
 
 ### View Logs
-```bash
-docker-compose logs [service_name]
-```
 
----
+docker-compose logs [service_name]
+
 
 [![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)  
 **Note**: Adjust resource limits in `docker-compose.yml` according to server specifications. For production, use secure secret management.
